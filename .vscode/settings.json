@@ -1,0 +1,6 @@
+{
+	"audioCues.enabled": "off",
+	"files.associations": {
+		"*.css": "tailwindcss"
+	}
+}
