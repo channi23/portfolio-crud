@@ -1,36 +1,19 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import ProjectForm from '$lib/components/ProjectForm.svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 	import type { Project } from '$lib/types/project';
-	import { loadProject, saveProject } from '$lib/storage/projectStorage';
+	import type { PageData } from './$types';
 
-	let projects = $state<Project[]>([]);
+	let { data }: { data: PageData } = $props();
+
+	let projects = $derived(data.projects);
 	let editingProject = $state<Project | null>(null);
-
-	onMount(() => {
-		projects = loadProject();
-	});
-
-	function addProject(project: Project) {
-		projects = [project, ...projects];
-		saveProject(projects);
-	}
-
-	function deleteProject(id: string) {
-		projects = projects.filter((project) => project.id !== id);
-		saveProject(projects);
-	}
 
 	function startEdit(project: Project) {
 		editingProject = project;
 	}
 
-	function updateProject(updatedProject: Project) {
-		projects = projects.map((project) =>
-			project.id === updatedProject.id ? updatedProject : project
-		);
-		saveProject(projects);
+	function updateProject(_updatedProject: Project) {
 		editingProject = null;
 	}
 </script>
@@ -51,8 +34,6 @@
 				</h2>
 
 				<ProjectForm
-					onAddProject={addProject}
-					onUpdateProject={updateProject}
 					editingProject={editingProject}
 				/>
 			</section>
@@ -70,7 +51,7 @@
 				{:else}
 					<div class="grid gap-4 md:grid-cols-2">
 						{#each projects as project (project.id)}
-							<ProjectCard project={project} onDelete={deleteProject} onEdit={startEdit} />
+							<ProjectCard project={project} onEdit={startEdit} />
 						{/each}
 					</div>
 				{/if}
