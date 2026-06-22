@@ -5,11 +5,9 @@
 
 	let {
 		project,
-		onDelete,
 		onEdit
 	}: {
 		project: Project;
-		onDelete: (id: string) => void;
 		onEdit: (project: Project) => void;
 	} = $props();
 </script>
@@ -32,7 +30,7 @@
 			<a
 				href={project.githubUrl}
 				target="_blank"
-				rel="noopener noreferrer"
+				rel="external noopener noreferrer"
 				data-sveltekit-reload
 				class="underline underline-offset-4 hover:text-gray-300"
 			>
@@ -42,7 +40,7 @@
 			<a
 				href={project.liveUrl}
 				target="_blank"
-				rel="noopener noreferrer"
+				rel="external noopener noreferrer"
 				data-sveltekit-reload
 				class="underline underline-offset-4 hover:text-gray-300"
 			>
@@ -61,13 +59,15 @@
 			Update
 		</Button>
 
-		<Button
-			type="button"
-			variant="outline"
-			onclick={() => onDelete(project.id)}
-			class="border-white bg-black text-white hover:bg-white hover:text-black"
-		>
-			Delete
-		</Button>
+		<form method="POST" action="?/delete">
+			<input type="hidden" name="id" value={project.id} />
+			<Button
+				type="submit"
+				variant="outline"
+				class="border-white bg-black text-white hover:bg-white hover:text-black"
+			>
+				Delete
+			</Button>
+		</form>
 	</Card.Footer>
 </Card.Root>
